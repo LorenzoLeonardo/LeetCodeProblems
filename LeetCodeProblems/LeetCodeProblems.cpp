@@ -12,6 +12,12 @@
 
 #include <map>
 using namespace std;
+struct tree {
+    int x;
+    tree* l;
+    tree* r;
+};
+
 
 class Solution {
 public:
@@ -58,22 +64,66 @@ public:
             return (double)(((double)vec[(nSize / 2) - 1] + (double)vec[(nSize / 2)]) / 2);
         }
     }
+    int minimumMovesToConvertString(string s) 
+    {
 
-    int maxRotateFunction(vector<int>& nums) {
-        int sum = 0, F = 0, n = nums.size();
-        for (int i = 0; i < n; i++) {
+        int cnt = 0;
+        for (int i = 0; i < s.length(); i++) 
+        {
+
+            if (s[i] == 'X') 
+            {
+                cnt++;
+                i += 2;
+            }
+        }
+        return cnt;
+
+    }
+    vector<int> sequentialDigits(int low, int high) 
+    {
+        vector <int> ans;
+        for (int i = 1; i <= 9; i++)
+        {
+            for (int j = 1; j + i - 1 <= 9; j++) 
+            {
+                int x = 0;
+                for (int k = 0; k < i; k++) 
+                {
+                    x = (x * 10) + (j + k);
+                }
+                if (low <= x && x <= high) 
+                {
+                    ans.push_back(x);
+                }
+            }
+        }
+        return ans;
+    }
+
+    int maxRotateFunction(vector<int>& nums) 
+    {
+        int sum = 0;
+        int F = 0;
+        int numSize = (int) nums.size();
+
+        for (int i = 0; i < numSize; i++)
+        {
             sum += nums[i];
             F += i * nums[i];
         }
         int max = F;
-        for (int i = n - 1; i > 0; i--) {
-            F = F + sum - n * nums[i];
+        
+        for (int i = numSize - 1; i > 0; i--)
+        {
+            F = F + sum - numSize * nums[i];
             max = std::max(max, F);
         }
         return max;
     }
 
-    int firstMissingPositive(vector<int>& A) {
+    int firstMissingPositive(vector<int>& A) 
+    {
 
         int nIterator = 1;
  
@@ -91,14 +141,17 @@ public:
         return nIterator;
     }
 
-    bool winnerSquareGame(int n) {
+    bool winnerSquareGame(int n) 
+    {
 
         bool* dp = new bool[n + 1];
 
         memset(dp, false, sizeof(bool) * (n + 1));
 
-        for (int i = 0; i <= n; i++) {
-            if (dp[i]) {
+        for (int i = 0; i <= n; i++) 
+        {
+            if (dp[i]) 
+            {
                 continue;
             }
             for (int k = 1; i + k * k <= n; k++) {
@@ -107,24 +160,30 @@ public:
         }
         return dp[n];
     }
-
-    vector<int> sequentialDigits(int low, int high) {
+    /*
+    vector<int> sequentialDigits(int low, int high) 
+    {
         vector <int> ans;
-        for (int i = 1; i <= 9; i++) {
-            for (int j = 1; j + i - 1 <= 9; j++) {
+        for (int i = 1; i <= 9; i++)
+        {
+            for (int j = 1; j + i - 1 <= 9; j++)
+            {
                 int x = 0;
-                for (int k = 0; k < i; k++) {
+                for (int k = 0; k < i; k++) 
+                {
                     x = (x * 10) + (j + k);
                 }
-                if (low <= x && x <= high) {
+                if (low <= x && x <= high) 
+                {
                     ans.push_back(x);
                 }
             }
         }
         return ans;
-    }
+    }*/
 
-    string convertToBase7(int num) {
+    string convertToBase7(int num) 
+    {
 
         if (num < -(10000000))
             return "";
@@ -480,13 +539,166 @@ public:
         return ans;
     }
 
+    string crop(string& message, int K) {
+        // write your code in C++14 (g++ 6.2.0)
+        trim(message);
+
+        if ((int)message.length() > K)
+        {
+            string substring;
+            substring = message;
+
+            substring = substring.substr(0, K);
+            if (substring[substring.size() - 1] != ' ')
+            {
+                for (int i = K; i < message.length(); i++)
+                {
+                    if (message[i] != ' ')
+                        substring.push_back(message[i]);
+                    else
+                        break;
+                }
+                return substring;
+            }
+            else if (substring[substring.size() - 1] == ' ')
+            {
+                trim(substring);
+                return substring;
+            }
+
+        }
+        else
+        {
+            return message;
+        }
+    }
+
+    int zigzag(tree** t, int max)
+    {
+        int countl = 0;
+        int countr = 0;
+       
+        //stdout('c');
+
+        //checking left zigzag
+        while (1)
+        {
+            if ((*t)->l != NULL)
+            {
+                (*t) = (*t)->l;
+                countl++;
+            }
+            else
+                break;
+            if ((*t)->r != NULL)
+            {
+                (*t) = (*t)->r;
+                countl++;
+            }
+            else
+                break;
+        }
+        if (countl > max)
+            max = countl;
+
+        //now check for right zizzag
+        while (1)
+        {
+            if ((*t)->r != NULL)
+            {
+                (*t) = (*t)->r;
+                countr++;
+            }
+            else
+                break;
+            if ((*t)->l != NULL)
+            {
+                (*t) = (*t)->l;
+                countr++;
+            }
+            else
+                break;
+        }
+        if (countr > max)
+            max = countr;
+        //recursively check for all nodes
+        max = zigzag(&((*t)->l), max);
+        max = zigzag(&((*t)->r), max);
+        return max;
+    }
+
+    int LongestZigSag(tree* T) {
+        // write your code in C++14 (g++ 6->2->0)
+        return zigzag(&T, 0);
+    }
+
+    int GetSum(vector<int> A)
+    {
+        int nSumPolution = 0;
+        for (int i = 0; i < (int)A.size(); i++)
+        {
+            nSumPolution += A[i];
+        }
+        return nSumPolution;
+    }
+    int NumOfFiltersFactory(vector<int>& A)
+    {
+        double dblTotalPolution = 0, dblCurrentPolution = 0;
+        double dblTemp = 0, dblTargetPolution = 0;
+        double dblAverage = 0;
+        vector<double> vdbl;
+        int nCounter = 0;
+
+        dblTotalPolution = (double)GetSum(A);
+        dblTargetPolution = dblTotalPolution / 2;
+
+        sort(A.begin(),A.end());
+        for (int i = A.size() - 1; i >= 0; i--)
+        {
+            vdbl.push_back((double)A[i]);
+        }
+        dblAverage = (dblTotalPolution / (double)vdbl.size());
+        dblCurrentPolution = dblTotalPolution;
+        while ((dblCurrentPolution > dblTargetPolution))
+        {
+            dblAverage = (dblCurrentPolution / (double)vdbl.size());
+            for (int i = 0; (i < (int)vdbl.size()) && (dblCurrentPolution > dblTargetPolution) && (dblAverage <= vdbl[i]); i++)
+            {
+                dblTemp = vdbl[i] / 2;
+                if (dblTemp > 1)
+                {
+                    vdbl[i] = dblTemp;
+                    nCounter++;
+                    dblCurrentPolution -= dblTemp;
+                }
+
+            }
+        }
+        return nCounter;
+    }
 };
 
 int main()
 {
-    vector<int> input = { 4 };
+    Solution sol;
+    string s = "To crop or not to crop";
+    sol.crop(s, 21);
 
+    vector<int> nGiven = {100,100,100,100,100 ,100,100, 100,100, 100 };
+    printf("%d\n", sol.NumOfFiltersFactory(nGiven));
 
+    /*
+    tree* t = NULL;
+    t = new tree;
+    t->l = NULL;
+    t->r = NULL;
+    t->x = 5;
+    printf("%d\n", sol.LongestZigSag(t));
+    */
+
+   /* vector<int> input = {4};
+
+    //tree t;
     Solution sol;
     string sample ="test123 test1232";
 
@@ -497,7 +709,7 @@ int main()
 
     //int n = sol.SparseBinaryDecomposition(74901729);
    // std::cout << n;
-
+   
     int num = 3;
     int nGiven = 26;
     int nSparse = 0;
@@ -509,7 +721,7 @@ int main()
                 printf("%d\n", i);
             }
         }
-
+        */
 
     return 0;
 }
